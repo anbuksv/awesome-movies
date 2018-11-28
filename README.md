@@ -20,18 +20,9 @@ $ movies the dark knight
 $ movies [flags] '[movie name]'
 ```
 
-## Examples
-
-Download a webpage with wget.
-
-```bash
-$ wget http://en.wikipedia.org/wiki/Robots_exclusion_standard -O robots.html
-```
-
 ## Roadmap
-
-[x] yts
-[ ] Tamilrockers
+- [x] yts
+- [ ] Tamilrockers
 
 ## Flags
 

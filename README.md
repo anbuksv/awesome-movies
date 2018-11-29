@@ -19,6 +19,9 @@ $ movies the dark knight
 ```bash
 $ movies [flags] '[movie name]'
 ```
+## Examples
+
+![Example](examples/awesome-movies_2018-11-29_112814.gif)
 
 ## Roadmap
 - [x] yts

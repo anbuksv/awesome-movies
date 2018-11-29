@@ -70,7 +70,11 @@ func main(){
 	nodes := pup.Run(torrentHtml)
 	json.Unmarshal(nodes,&YTS.DownloadResults)
 	color.Set(color.FgYellow, color.Bold)
-	fmt.Println(YTS.DownloadResults[len(YTS.DownloadResults)-1].Href) //By default high resolution torrent link will be printed
+	for _,result:= range(YTS.DownloadResults){
+		color.New(color.FgYellow,color.Bold).Print("("+ result.Text +") ")
+		color.White(result.Href + "\n")
+	}
+	// fmt.Println(YTS.DownloadResults[len(YTS.DownloadResults)-1].Href) //By default high resolution torrent link will be printed
 	color.Unset()
 }
 
@@ -81,7 +85,7 @@ func ParseFlages() string {
 	for i := 0; i < len(cmds); i++ {
 		cmd := cmds[i]
 		switch cmd {
-		case "-h","--help","help":
+		case "-h","--help":
 			PrintMoviesHelp(os.Stdout, 0)
 		case "--version":
 			fmt.Println(MOVIES_VERSION)

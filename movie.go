@@ -40,7 +40,8 @@ var (
 		Timeout: timeout,
 	}
 	YTS = Yts{}
-	MOVIES_VERSION string = "1.0.0"
+	MOVIES_VERSION string = "1.0.1"
+	language string
 )
 
 func UrlEncoded(str string) string {
@@ -51,18 +52,26 @@ func UrlEncoded(str string) string {
     return u.String()
 }
 
-func main(){
-	search := ParseFlages()
-	searchMovie(search)
-	if len(YTS.SearchResults.Movies) <= 0 {
+func moviesResultCheck(length int){
+	if length <= 0 {
 		color.Set(color.FgMagenta, color.Bold)
 		fmt.Println("No movies found.")
 		color.Unset()
 		os.Exit(0)
 	}
+}
+
+func main(){
+	search := ParseFlages()
+	if strings.ToLower(language) == "tamil"{
+		SearchTamilMovies(search)
+		return
+	}
+	searchMovie(search)
+	moviesResultCheck(len(YTS.SearchResults.Movies))
 	fmt.Printf("%s",listMovies())
-	downloadIndex := getConformation()
-	torrentHtml := torrentPage(YTS.SearchResults.Movies[downloadIndex].Url)
+	downloadIndex := getConformation(len(YTS.SearchResults.Movies))
+	torrentHtml := downloadHTML(YTS.SearchResults.Movies[downloadIndex].Url)
 	os.Args = []string{
 		"anbuksv",
 		"#movie-info > p a json{}",
@@ -90,6 +99,9 @@ func ParseFlages() string {
 		case "--version":
 			fmt.Println(MOVIES_VERSION)
 			os.Exit(0)
+		case "-l","--language":
+			language = cmds[i+1]
+			i++
 		default:
 			nonFlagCmds[n] = cmds[i]
 			n++
@@ -100,27 +112,28 @@ func ParseFlages() string {
 
 func PrintMoviesHelp(w io.Writer, exitCode int) {
 	helpString := `Usage
-    movies [movie name] [flags]
+    movies Name [flags]
 Version
     %s
 Flags
     -h --help          display this help
     --version          display version
+    -l --language      movie language
 `
 	fmt.Fprintf(w, helpString, MOVIES_VERSION)
 	os.Exit(exitCode)
 }
 
-func getConformation() int {
+func getConformation(limit int) int {
 	var downloadIndex int
 	color.Set(color.FgWhite, color.Bold)
 	fmt.Print("awesome-movie> ")
 	color.Unset()
 	fmt.Scan(&downloadIndex)
 	downloadIndex = downloadIndex - 1
-	if downloadIndex < 0 || downloadIndex >= len(YTS.SearchResults.Movies){
+	if downloadIndex < 0 || downloadIndex >= limit{
 		fmt.Println("awesome-movie> Please enter valid number.")
-		return getConformation()
+		return getConformation(limit)
 	}
 	return downloadIndex
 }
@@ -135,14 +148,14 @@ func onHttpError(err error){
 func searchMovie(query string) {
 	resp,err := HttpClient.Get("https://yts.am/ajax/search?query="+UrlEncoded(query))
 	if err != nil{
-		onHttpError(err)		
+		onHttpError(err)
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	json.Unmarshal([]byte(body),&YTS.SearchResults)
 }
 
-func torrentPage(url string) io.ReadCloser {
+func downloadHTML(url string) io.ReadCloser {
 	resp,err := HttpClient.Get(url)
 	if err != nil {
 		onHttpError(err)

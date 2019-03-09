@@ -1,0 +1,5 @@
+#!/bin/bash
+MOVIES_PKG=$PWD/vendor
+export GOPATH=$MOVIES_PKG
+go build
+awesome-movies $@

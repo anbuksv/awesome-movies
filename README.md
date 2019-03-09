@@ -7,7 +7,6 @@ prints to stdout.
 
 Direct downloads are available through the [releases page](https://github.com/anbuksv/awesome-movies/releases/latest).
 
-
 ## Quick start
 
 ```bash
@@ -19,13 +18,21 @@ $ movies the dark knight
 ```bash
 $ movies [flags] '[movie name]'
 ```
+
 ## Examples
 
 ![Example](examples/awesome-movies_2018-11-29_112814.gif)
 
+### Tamil Movies
+
+```bash
+$ movies -l tamil '[movie name]'
+```
+
 ## Roadmap
-- [x] yts
-- [ ] Tamilrockers
+
+-   [x] yts
+-   [x] tamilmv
 
 ## Flags
 

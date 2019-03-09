@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"net/http"
-	"net/url"
+//	"net/url"
 	"encoding/json"
 	"strconv"
 
@@ -30,7 +30,8 @@ var (
 )
 
 func SearchTamilMovies(query string){
-	resp,err := http.PostForm(searchURL,url.Values{"type":{"all"},"q":{query}})
+	//resp,err := http.PostForm(searchURL,url.Values{"type":{"all"},"q":{query}})
+	resp,err := http.Get(searchURL+"&q="+UrlEncoded(query)+"&nodes=1,2,3")
 	if err != nil {
 		onHttpError(err)
 	}

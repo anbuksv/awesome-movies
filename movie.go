@@ -67,7 +67,7 @@ func main(){
 		SearchTamilMovies(search)
 		return
 	}
-	searchMovie(search)
+	searchMovie("https://yts.am/ajax/search?query=",search)
 	moviesResultCheck(len(YTS.SearchResults.Movies))
 	fmt.Printf("%s",listMovies())
 	downloadIndex := getConformation(len(YTS.SearchResults.Movies))
@@ -145,8 +145,8 @@ func onHttpError(err error){
 	os.Exit(0)
 }
 
-func searchMovie(query string) {
-	resp,err := HttpClient.Get("https://yts.am/ajax/search?query="+UrlEncoded(query))
+func searchMovie(url string, query string) {
+	resp,err := HttpClient.Get(url+UrlEncoded(query))
 	if err != nil{
 		onHttpError(err)
 	}
